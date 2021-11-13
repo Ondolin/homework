@@ -50,6 +50,13 @@ python make_task.py <name>
 
 This command will create a latex subfile for your task. It will automatically add the subfile import into the main.tex file.
 
+## Make a PDF
+
+```bash
+latexmk
+mv ./out/main.pdf ./Exercise.pdf
+```
+
 ## Nomenclature
 
 1. Project = The name of the subject
