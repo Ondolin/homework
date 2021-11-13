@@ -7,4 +7,5 @@
 *.ps
 *.synctex.gz
 *.out
+out
 .DS_Store
