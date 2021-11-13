@@ -57,15 +57,15 @@ for line in main_file.splitlines():
     elif not before and not after:
         between_tasks.append(line)
 
-between_tasks.append("\t\subfile{./tasks/task_" + str(task_number) + ".tex}")
+new_import = "\t\subfile{./tasks/task_" + str(task_number) + ".tex}"
+
+if not new_import in between_tasks:
+    between_tasks.append(new_import)
 
 between_tasks.sort()
 
 # Write the file out again
 main_file = before_begin_tasks + ("\n".join([item for item in between_tasks])) + "\n" + after_end_tasks
-
-# remove the last newline
-# main_file = main_file[:-1]
 
 # Write the file out again
 with open("./main.tex", 'w') as file:
