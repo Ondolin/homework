@@ -34,7 +34,7 @@ with open("./tasks/task_" + str(task_number) + ".tex", 'w') as file:
 
 # Read in the file
 with open("./main.tex", 'r') as file :
-  filedata = file.read()
+  main_file = file.read()
 
 before_begin_tasks = ""
 between_tasks = []
@@ -43,30 +43,32 @@ after_end_tasks = ""
 before = True
 after = False
 
-for line in filedata.splitlines():
+for line in main_file.splitlines():
     if '% BEGIN TASKS' in line:
         before = False
-    if '% END TASKS' in line:
-        after = True
-    if before:
         before_begin_tasks += line + '\n'
-    if after:
+    elif '% END TASKS' in line:
+        after = True
         after_end_tasks += line + '\n'
-    if not before and not after:
+    elif before:
+        before_begin_tasks += line + '\n'
+    elif after:
+        after_end_tasks += line + '\n'
+    elif not before and not after:
         between_tasks.append(line)
 
-between_tasks.appand("\t\subfile{./tasks/task_" + str(task_number) + ".tex}")
+between_tasks.append("\t\subfile{./tasks/task_" + str(task_number) + ".tex}")
 
 between_tasks.sort()
 
 # Write the file out again
-filedata = before_begin_tasks + ("".join([item for item in between_tasks])) + after_end_tasks
+main_file = before_begin_tasks + ("\n".join([item for item in between_tasks])) + "\n" + after_end_tasks
 
 # remove the last newline
-filedata = filedata[:-1]
+# main_file = main_file[:-1]
 
 # Write the file out again
 with open("./main.tex", 'w') as file:
-  file.write(filedata)
+  file.write(main_file)
 
 
