@@ -1,40 +1,44 @@
 import sys
 import shutil
 from pathlib import Path
+import os
 
 try:
     task_number = int(sys.argv[1])
 except ValueError:
     print("Please specify a correct task number!")
     sys.exit(1)
+except IndexError:
+    print("Please specify a task number as parameter")
+    sys.exit(1)
 
-
-task_path = Path("./tasks/task_" + str(task_number) + ".tex")
+task_path = Path(f"./tasks/task_{task_number}.tex")
 
 if task_path.exists():
     overwrite = input("Task already exists. Overwrite? (y/n) ")
     if overwrite == 'y':
         task_path.unlink()
-    
     else:
         sys.exit(0)
 
-shutil.copyfile("../.task_template.tex", "./tasks/task_" + str(task_number) + ".tex")
+os.makedirs("tasks", exist_ok=True)
+
+shutil.copyfile("../.task_template.tex", f"./tasks/task_{task_number}.tex")
 
 # Read in the file
-with open("./tasks/task_" + str(task_number) + ".tex", 'r') as file :
-  filedata = file.read()
+with open(f"./tasks/task_{task_number}.tex", 'r') as file:
+    filedata = file.read()
 
 # Replace the target string
 filedata = filedata.replace('{TASK_NAME}', str(task_number))
 
 # Write the file out again
 with open("./tasks/task_" + str(task_number) + ".tex", 'w') as file:
-  file.write(filedata)
+    file.write(filedata)
 
 # Read in the file
-with open("./main.tex", 'r') as file :
-  main_file = file.read()
+with open("./main.tex", 'r') as file:
+    main_file = file.read()
 
 before_begin_tasks = ""
 between_tasks = []
@@ -59,7 +63,7 @@ for line in main_file.splitlines():
 
 new_import = "\t\subfile{./tasks/task_" + str(task_number) + ".tex}"
 
-if not new_import in between_tasks:
+if new_import not in between_tasks:
     between_tasks.append(new_import)
 
 between_tasks.sort()
@@ -69,6 +73,4 @@ main_file = before_begin_tasks + ("\n".join([item for item in between_tasks])) +
 
 # Write the file out again
 with open("./main.tex", 'w') as file:
-  file.write(main_file)
-
-
+    file.write(main_file)

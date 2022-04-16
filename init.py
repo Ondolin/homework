@@ -1,3 +1,4 @@
+import os
 import shutil
 from pathlib import Path
 
@@ -28,11 +29,11 @@ while True:
     else:
         group_members.append(name)
 
-group_member = (" \\\\ \n\t".join([item for item in group_members]))
+group_member = (" \\\\ \n\t".join(group_members))
 
 # Read in the file
-with open('./.generated/main.tex', 'r') as file :
-  filedata = file.read()
+with open('./.generated/main.tex', 'r') as file:
+    filedata = file.read()
 
 # Replace the target string
 filedata = filedata.replace('{SUBJECT}', subject_name)
@@ -40,4 +41,8 @@ filedata = filedata.replace('{GROUP_MEMBERS}', group_member)
 
 # Write the file out again
 with open('./.generated/main.tex', 'w') as file:
-  file.write(filedata)
+    file.write(filedata)
+
+secondary_files = [".latexmkrc", "make_pdf.sh", "make_task.py"]
+for file in secondary_files:
+    shutil.copy(os.path.join(".exercise_template", file), os.path.join(".generated", file))
